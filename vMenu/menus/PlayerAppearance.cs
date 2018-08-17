@@ -120,7 +120,7 @@ namespace vMenuClient
         private void CreateMenu()
         {
             // Create the menu.
-            menu = new UIMenu(GetPlayerName(PlayerId()), "Player Appearance", true)
+            menu = new UIMenu("BigFam Crew", "Player Appearance", true)
             {
                 ScaleWithSafezone = false,
                 MouseControlsEnabled = false,

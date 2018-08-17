@@ -18,7 +18,7 @@ namespace vMenuClient
         private void CreateMenu()
         {
             // Create the menu.
-            menu = new UIMenu("vMenu", "About vMenu", true)
+            menu = new UIMenu("BigFam Crew", "About vMenu", true)
             {
                 ScaleWithSafezone = false,
                 MouseControlsEnabled = false,

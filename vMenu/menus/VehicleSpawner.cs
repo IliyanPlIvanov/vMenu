@@ -50,7 +50,7 @@ namespace vMenuClient
             };
 
             // Create the menu.
-            menu = new UIMenu(GetPlayerName(PlayerId()), "Vehicle Spawner", true)
+            menu = new UIMenu("BigFam Crew", "Vehicle Spawner", true)
             {
                 ScaleWithSafezone = false,
                 MouseControlsEnabled = false,
@@ -70,8 +70,8 @@ namespace vMenuClient
             {
                 menu.AddItem(spawnByName);
             }
-            menu.AddItem(spawnInVeh);
-            menu.AddItem(replacePrev);
+            //menu.AddItem(spawnInVeh);
+            //menu.AddItem(replacePrev);
             #endregion
 
             #region addon cars menu
@@ -111,7 +111,35 @@ namespace vMenuClient
                             }
                             addonCarsMenu.AddItem(carBtn);
                         }
+                        /*
+                        //AddonVehicles.ToList();
+                        List<UIMenuItem> buttonsList = new List<UIMenuItem> { };
+                        menu.BindMenuToItem(addonCarsMenu, addonCarsBtn);
+                        MainMenu.Mp.Add(addonCarsMenu);
+                        foreach (KeyValuePair<string, uint> veh in AddonVehicles)
+                        {
+                            string localizedName = GetLabelText(GetDisplayNameFromVehicleModel(veh.Value));
+                            string name = localizedName != "NULL" ? localizedName : GetDisplayNameFromVehicleModel(veh.Value);
+                            name = name != "CARNOTFOUND" ? name : veh.Key;                            
+                            UIMenuItem carBtn = new UIMenuItem(name, $"Click to spawn {name}.");
+                            carBtn.SetRightLabel($"({veh.Key.ToString()})");
+                            if (!IsModelInCdimage(veh.Value))
+                            {
+                                carBtn.Enabled = false;
+                                carBtn.Description = "This vehicle is not available. Please ask the server owner to check if the vehicle is being streamed correctly.";
+                                carBtn.SetLeftBadge(UIMenuItem.BadgeStyle.Lock);
+                            }
 
+                            buttonsList.Add(carBtn);
+                        }
+
+                        buttonsList.Sort((prev, next) => String.Compare(prev.Text, next.Text));
+
+                        buttonsList.ForEach(carBtn =>
+                        {
+                            addonCarsMenu.AddItem(carBtn);
+                        });
+                        */
                         addonCarsMenu.OnItemSelect += (sender, item, index) =>
                         {
                             cf.SpawnVehicle(AddonVehicles.ElementAt(index).Key, SpawnInVehicle, ReplaceVehicle);
@@ -163,6 +191,7 @@ namespace vMenuClient
                     ControlDisablingEnabled = false
                 };
 
+                /*
                 MainMenu.Mp.Add(vehicleClassMenu);
                 menu.AddItem(btn);
 
@@ -176,6 +205,7 @@ namespace vMenuClient
                     btn.Description = "This category has been disabled by the server owner.";
                     btn.Enabled = false;
                 }
+                */
 
                 // Create a dictionary for the duplicate vehicle names (in this vehicle class).
                 var duplicateVehNames = new Dictionary<string, int>();

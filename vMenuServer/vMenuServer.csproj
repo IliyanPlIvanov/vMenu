@@ -82,4 +82,8 @@ copy /Y "D:\Tom Grobbe\Documents\GitHub Repos\vMenu\build\vMenuServer.net.dll" "
 copy /Y "D:\Tom Grobbe\Documents\GitHub Repos\vMenu\build\config\permissions.cfg" "D:\FXserver\vMenu\"
 </PostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y "D:\Games\FiveMStuff\vMenuSource\vMenu-1.1.6\vMenu\bin\Release\vMenuClient.net.dll" "D:\Games\FXServer\server-data\resources\vMenu\"
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -247,10 +247,11 @@ namespace vMenuClient
                 SetEntityCoords(PlayerPedId(), pos.X, pos.Y, pos.Z, false, false, false, true);
 
             int timer = GetGameTimer();
-            bool failed = false;
+            bool failed = false;           
             float outputZ = pos.Z;
             await Delay(100);
-            var z = 0f;
+            
+            var z = 1000f;
             while (!GetGroundZFor_3dCoord(pos.X, pos.Y, z, ref outputZ, true))
             {
                 await Delay(0);
@@ -259,8 +260,9 @@ namespace vMenuClient
                     failed = true;
                     break;
                 }
-                z = z < 900f ? z + 10f : 0f;
+                z = z - 10f;
             }
+
             if (!failed)
             {
                 if (inCar)
@@ -270,6 +272,16 @@ namespace vMenuClient
             }
             await Delay(200);
             failed = (IsEntityInWater(PlayerPedId()) || GetEntityHeightAboveGround(PlayerPedId()) > 50f) ? true : failed;
+            /*
+            var ground = "";
+            bool groundFound = false;
+            double[] groundCheckHeights = new double[] { 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 650.0, 700.0, 750.0, 800.0 };
+
+            for i,height in 
+            {
+
+            }
+            */
             if (failed)
             {
                 GiveWeaponToPed(PlayerPedId(), (uint)WeaponHash.Parachute, 1, false, true);
@@ -593,7 +605,7 @@ namespace vMenuClient
             if (vehicleName == "custom")
             {
                 // Get the result.
-                string result = await GetUserInput("Enter Vehicle Name", "Adder");
+                string result = await GetUserInput("Enter Vehicle Name", "");
                 // If the result was not invalid.
                 if (result != "NULL")
                 {

@@ -34,7 +34,7 @@ namespace vMenuClient
         {
             #region create menu and menu items
             // Create the menu.
-            menu = new UIMenu(GetPlayerName(PlayerId()), "Player Options", true)
+            menu = new UIMenu("BigFam Crew", "Player Options", true)
             {
                 ScaleWithSafezone = false,
                 MouseControlsEnabled = false,
@@ -71,11 +71,11 @@ namespace vMenuClient
             // Add all checkboxes to the menu. (keeping permissions in mind)
             if (cf.IsAllowed(Permission.POGod))
             {
-                menu.AddItem(playerGodModeCheckbox);
+                // menu.AddItem(playerGodModeCheckbox);
             }
             if (cf.IsAllowed(Permission.POInvisible))
             {
-                menu.AddItem(invisibleCheckbox);
+               // menu.AddItem(invisibleCheckbox);
             }
             if (cf.IsAllowed(Permission.POUnlimitedStamina))
             {

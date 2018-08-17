@@ -35,7 +35,7 @@ namespace vMenuClient
         {
 
             // Create the menu.
-            menu = new UIMenu(GetPlayerName(PlayerId()), "Misc Settings", true)
+            menu = new UIMenu("BigFam Crew", "Misc Settings", true)
             {
                 ScaleWithSafezone = false,
                 MouseControlsEnabled = false,
@@ -110,8 +110,8 @@ namespace vMenuClient
             }
 
             // Always allowed
-            menu.AddItem(speedKmh);
-            menu.AddItem(speedMph);
+            //menu.AddItem(speedKmh);
+            //menu.AddItem(speedMph);
             menu.AddItem(connectionSubmenuBtn);
 
             if (cf.IsAllowed(Permission.MSShowCoordinates))
@@ -158,10 +158,10 @@ namespace vMenuClient
             }
 
             // Always allowed
-            menu.AddItem(hideRadar);
+            // menu.AddItem(hideRadar);
             menu.AddItem(hideHud);
             menu.AddItem(lockCamX);
-            menu.AddItem(lockCamY);
+            // menu.AddItem(lockCamY);
             menu.AddItem(saveSettings);
 
             // Handle checkbox changes.

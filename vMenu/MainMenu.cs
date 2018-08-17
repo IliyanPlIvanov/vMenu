@@ -361,7 +361,7 @@ namespace vMenuClient
                 }
 
                 // Create the main menu.
-                Menu = new UIMenu(GetPlayerName(PlayerId()), "Main Menu", true)
+                Menu = new UIMenu("BigFam Crew", "Main Menu", true)
                 {
                     ScaleWithSafezone = false,
                     MouseControlsEnabled = false,
@@ -706,7 +706,7 @@ namespace vMenuClient
             UIMenu sub = AboutMenu.GetMenu();
             UIMenuItem btn = new UIMenuItem("About vMenu", "Information about this menu and it's creators.");
             btn.SetRightLabel("→→→");
-            AddMenu(sub, btn);
+            //AddMenu(sub, btn);
 
             // Refresh everything.
             Mp.RefreshIndex();

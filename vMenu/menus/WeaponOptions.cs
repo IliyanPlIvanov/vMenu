@@ -32,7 +32,7 @@ namespace vMenuClient
         {
             #region create main weapon options menu and add items
             // Create the menu.
-            menu = new UIMenu(GetPlayerName(PlayerId()), "Weapon Options", true)
+            menu = new UIMenu("BigFam Crew", "Weapon Options", true)
             {
                 ScaleWithSafezone = false,
                 MouseControlsEnabled = false,

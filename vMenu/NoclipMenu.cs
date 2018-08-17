@@ -23,7 +23,7 @@ namespace vMenuClient
             "Fast",
             "Very Fast",
             "Extremely Fast",
-            "~g~~h~Snail~h~ ~s~Speed!"
+            "~r~~h~WARP~h~ ~s~Speed!"
         };
 
         /// <summary>
@@ -103,11 +103,11 @@ namespace vMenuClient
 
                             if (Game.IsDisabledControlPressed(0, Control.MoveUpOnly))
                             {
-                                yoff = 0.5f;
+                                yoff = 3.0f;
                             }
                             if (Game.IsDisabledControlPressed(0, Control.MoveDownOnly))
                             {
-                                yoff = -0.5f;
+                                yoff = -3.0f;
                             }
                             if (Game.IsDisabledControlPressed(0, Control.MoveLeftOnly))
                             {
@@ -119,11 +119,11 @@ namespace vMenuClient
                             }
                             if (Game.IsDisabledControlPressed(0, Control.Cover))
                             {
-                                zoff = 0.21f;
+                                zoff = 0.6f;
                             }
                             if (Game.IsDisabledControlPressed(0, Control.MultiplayerInfo))
                             {
-                                zoff = -0.21f;
+                                zoff = -0.6f;
                             }
                         }
 

@@ -27,15 +27,15 @@ namespace vMenuClient
         public string currentChannel;
         private List<float> proximityRange = new List<float>()
         {
-            5f, // 5m
+            /*5f, // 5m
             10f, // 10m
             15f, // 15m
             20f, // 20m
             100f, // 100m
             300f, // 300m
-            1000f, // 1.000m
+            1000f, // 1.000m*/
             2000f, // 2.000m
-            0f, // global
+            //0f, // global
         };
 
         private void CreateMenu()
@@ -47,7 +47,7 @@ namespace vMenuClient
             }
 
             // Create the menu.
-            menu = new UIMenu(GetPlayerName(PlayerId()), "Voice Chat Settings", true)
+            menu = new UIMenu("BigFam Crew", "Voice Chat Settings", true)
             {
                 ScaleWithSafezone = false,
                 MouseControlsEnabled = false,
@@ -60,15 +60,15 @@ namespace vMenuClient
 
             List<dynamic> proximity = new List<dynamic>()
             {
-                "5 m",
+                /*"5 m",
                 "10 m",
                 "15 m",
                 "20 m",
                 "100 m",
                 "300 m",
-                "1 km",
+                "1 km",*/
                 "2 km",
-                "Global",
+                //"Global",
             };
             UIMenuListItem voiceChatProximity = new UIMenuListItem("Voice Chat Proximity", proximity, proximityRange.IndexOf(currentProximity), "Set the voice chat receiving proximity in meters.");
             UIMenuListItem voiceChatChannel = new UIMenuListItem("Voice Chat Channel", channels, channels.IndexOf(currentChannel), "Set the voice chat channel.");
@@ -83,7 +83,7 @@ namespace vMenuClient
                     menu.AddItem(showCurrentSpeaker);
                 }
 
-                menu.AddItem(voiceChatProximity);
+                //menu.AddItem(voiceChatProximity);
                 menu.AddItem(voiceChatChannel);
             }
 

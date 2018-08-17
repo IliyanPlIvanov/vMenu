@@ -35,7 +35,7 @@ namespace vMenuClient
         /// </summary>
         private void CreateMenu()
         {
-            menu = new UIMenu(GetPlayerName(PlayerId()), "Banned Players Management", true)
+            menu = new UIMenu("BigFam Crew", "Banned Players Management", true)
             {
                 ScaleWithSafezone = false,
                 MouseControlsEnabled = false,

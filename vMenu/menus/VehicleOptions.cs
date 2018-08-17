@@ -50,7 +50,7 @@ namespace vMenuClient
         private void CreateMenu()
         {
             // Create the menu.
-            menu = new UIMenu(GetPlayerName(PlayerId()), "Vehicle Options", true)
+            menu = new UIMenu("BigFam Crew", "Vehicle Options", true)
             {
                 ScaleWithSafezone = false,
                 MouseControlsEnabled = false,
@@ -212,7 +212,7 @@ namespace vMenuClient
             if (cf.IsAllowed(Permission.VOWash))
             {
                 menu.AddItem(cleanVehicle); // CLEAN VEHICLE
-                menu.AddItem(setDirtLevel); // SET DIRT LEVEL
+                // menu.AddItem(setDirtLevel); // SET DIRT LEVEL
             }
             if (cf.IsAllowed(Permission.VOEngine)) // TOGGLE ENGINE ON/OFF
             {
@@ -1189,7 +1189,7 @@ namespace vMenuClient
                 "vehicle. Note not all vehicles have lights.");
             UIMenuCheckboxItem underglowRight = new UIMenuCheckboxItem("Enable Right Light", false, "Enable or disable the underglow on the back side of the " +
                 "vehicle. Note not all vehicles have lights.");
-            var underglowColorsList = new List<dynamic>() { "Red", "Pink", "Purple", "Blacklight", "Dark Blue", "Light Blue", "White", "Lime", "Green", "Dark Green", "Gold", "Orange", "Yellow" };
+            var underglowColorsList = new List<dynamic>() { "Red", "Pink", "Purple", "Blacklight", "Dark Blue", "Light Blue", "White", "Lime", "Green", "Dark Green", "Gold", "Orange", "Yellow", "Cream", "Lava Red", "Grace Red" };
             UIMenuListItem underglowColor = new UIMenuListItem("Underglow Color", underglowColorsList, 0, "Select the color of the underglow.");
 
             VehicleUnderglowMenu.AddItem(underglowFront);
@@ -1676,6 +1676,12 @@ namespace vMenuClient
                     return System.Drawing.Color.FromArgb(red: 222, green: 85, blue: 10); // orange
                 case 12:
                     return System.Drawing.Color.FromArgb(red: 236, green: 244, blue: 28); // yellow
+                case 13:
+                    return System.Drawing.Color.FromArgb(red: 207, green: 192, blue: 168); // cream
+                case 14:
+                    return System.Drawing.Color.FromArgb(red: 105, green: 0, blue: 0); // Lava Red
+                case 15:
+                    return System.Drawing.Color.FromArgb(red: 74, green: 10, blue: 10); // Grace Red
                 default:
                     return System.Drawing.Color.FromArgb(red: 255, green: 255, blue: 255); // white
             }
