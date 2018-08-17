@@ -64,6 +64,7 @@
         VOLights,
         VODelete,
         VOUnderglow,
+        VOFlashHighbeamsOnHonk,
 
 
         // Vehicle Spawner
@@ -130,6 +131,7 @@
         WPUnlimitedAmmo,
         WPNoReload,
         WPSpawn,
+        WPSpawnByName,
         WPSetAllAmmo,
 
         //Weapons Permissions

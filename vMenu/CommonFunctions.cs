@@ -2042,7 +2042,6 @@ namespace vMenuClient
         /// <returns></returns>
         public UIMenu GetOpenMenu()
         {
-            UIMenu output = null;
             if (MainMenu.Mp.IsAnyMenuOpen())
             {
                 foreach (UIMenu m in MainMenu.Mp.ToList())
@@ -2053,7 +2052,7 @@ namespace vMenuClient
                     }
                 }
             }
-            return output;
+            return null;
 
         }
         #endregion

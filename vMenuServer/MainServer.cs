@@ -132,6 +132,7 @@ namespace vMenuServer
             "VOLights",
             "VODelete",
             "VOUnderglow",
+            "VOFlashHighbeamsOnHonk",
             
             // Vehicle Spawner
             "VSMenu",
@@ -197,6 +198,7 @@ namespace vMenuServer
             "WPUnlimitedAmmo",
             "WPNoReload",
             "WPSpawn",
+            "WPSpawnByName",
             "WPSetAllAmmo",
             
             // Weapons Permissions
