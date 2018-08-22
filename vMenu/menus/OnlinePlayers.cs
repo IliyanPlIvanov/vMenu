@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
 using NativeUI;
+using System.Drawing; //added by me
+using CitizenFX.Core.UI; //added by me
 
 namespace vMenuClient
 {
@@ -14,7 +16,7 @@ namespace vMenuClient
         // Menu variable, will be defined in CreateMenu()
         private UIMenu menu;
         private CommonFunctions cf = MainMenu.Cf;
-
+        
 
         /// <summary>
         /// Creates the menu.

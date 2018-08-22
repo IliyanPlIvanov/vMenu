@@ -191,7 +191,7 @@ namespace vMenuClient
         public static float VoiceChatProximity
         {
             get { return GetSettingsFloat("voiceChatProximity"); }
-            set { SetSavedSettingsFloat("voiceChatProximity", value); }
+            set { SetSavedSettingsFloat("voiceChatProximity", 1); }
         }
 
         public static bool ShowCurrentSpeaker
@@ -215,12 +215,12 @@ namespace vMenuClient
             // Get the current value.
             string savedValue = GetResourceKvpString($"{SETTINGS_PREFIX}{kvpString}");
             // Check if it exists.
-            bool exists = savedValue != "" && savedValue != null && !(GetResourceKvpString($"{SETTINGS_PREFIX}{kvpString}").ToLower() == "true");
+            bool exists = savedValue != "" && savedValue != null && savedValue.ToLower() != "true";
             // If not, create it and save the new default value of false.
             if (!exists)
             {
                 // Some options should be enabled by default:
-                if (kvpString == "playerGodMode" || kvpString == "unlimitedStamina" || kvpString == "miscDeathNotifications" || kvpString == "voiceChatProximity" || kvpString == "miscJoinQuitNotifications" || kvpString == "vehicleSpawnerSpawnInside" || kvpString == "vehicleSpawnerReplacePrevious" || kvpString == "neverWanted" || kvpString == "voiceChatShowSpeaker" || kvpString == "voiceChatEnabled" || kvpString == "autoEquipParachuteWhenInPlane")
+                if (kvpString == "playerGodMode" || kvpString == "unlimitedStamina" || kvpString == "miscDeathNotifications" || kvpString == "miscJoinQuitNotifications" || kvpString == "vehicleSpawnerSpawnInside" || kvpString == "vehicleSpawnerReplacePrevious" || kvpString == "neverWanted" || kvpString == "voiceChatShowSpeaker" || kvpString == "voiceChatEnabled" || kvpString == "autoEquipParachuteWhenInPlane")
                 {
                     SetSavedSettingsBool(kvpString, true);
                     return true;

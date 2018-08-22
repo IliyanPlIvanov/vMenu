@@ -8,6 +8,8 @@ using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
 using NativeUI;
 using System.Dynamic;
+using System.Drawing;
+using CitizenFX.Core.UI;
 
 namespace vMenuClient
 {
@@ -58,6 +60,9 @@ namespace vMenuClient
 
         public static bool DisableControls { get; set; } = false;
         private UIMenu currentMenu = null;
+
+        //private static float screenPosX = 1.1f; //added by me
+        //private static float screenPosY = 0.1f; // added by me
         #endregion
 
         /// <summary>
@@ -210,6 +215,10 @@ namespace vMenuClient
             {
                 if (currentMenu.Visible && !DisableControls)
                 {
+                    
+                    // Notify.Info("Menu Opened", false); // Printout as Notification the Screen Width - Currently it's always 1280(???)
+                    // Notify.Info(Menu.Size.ToString(), false);
+                    // Notify.Info(GetResourceKvpString("voiceChatProximity"));
                     // Check if the Go Up controls are pressed.
                     if (Game.IsDisabledControlJustPressed(0, Control.Phone) || Game.IsControlJustPressed(0, Control.SniperZoomInSecondary))
                     {
@@ -366,7 +375,17 @@ namespace vMenuClient
                 }
 
                 // Create the main menu.
-                Menu = new UIMenu("BigFam Crew", "Main Menu", true)
+                /*
+                int windowWidth = 0;
+                int windowHeight = 0;
+                GetScreenResolution(ref windowWidth, ref windowHeight);
+                Notify.Info(windowWidth.ToString() + " w", false);
+
+                int menuWidth = 400;
+                Notify.Info((windowWidth - menuWidth).ToString());
+                */
+
+                Menu = new UIMenu("BigFam Crew", "Main Menu", true)// new PointF(windowWidth - menuWidth - 20, 40))
                 {
                     ScaleWithSafezone = false,
                     MouseControlsEnabled = false,
@@ -375,6 +394,7 @@ namespace vMenuClient
                 };
 
                 // Add the main menu to the menu pool.
+                Menu.SetMenuWidthOffset(50);
                 Mp.Add(Menu);
 
                 Menu.RefreshIndex();

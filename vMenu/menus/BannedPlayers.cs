@@ -7,6 +7,8 @@ using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
 using NativeUI;
 using Newtonsoft.Json;
+using System.Drawing; //added by me
+using CitizenFX.Core.UI; //added by me
 
 namespace vMenuClient
 {

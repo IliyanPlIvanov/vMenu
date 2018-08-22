@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
 using NativeUI;
+using System.Drawing; //added by me
+using CitizenFX.Core.UI; //added by me
 
 namespace vMenuClient
 {
@@ -83,7 +85,7 @@ namespace vMenuClient
                     menu.AddItem(showCurrentSpeaker);
                 }
 
-                //menu.AddItem(voiceChatProximity);
+                // menu.AddItem(voiceChatProximity);
                 menu.AddItem(voiceChatChannel);
             }
 

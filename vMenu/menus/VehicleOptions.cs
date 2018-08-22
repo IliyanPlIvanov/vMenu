@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CitizenFX.Core;
-using static CitizenFX.Core.Native.API;
+﻿using CitizenFX.Core;
+using CitizenFX.Core.UI; //added by me
 using NativeUI;
+using System;
+using System.Collections.Generic;
+using System.Drawing; //added by me
+using static CitizenFX.Core.Native.API;
 
 namespace vMenuClient
 {
