@@ -27,7 +27,7 @@ namespace vMenuClient
         public UIMenu VehicleUnderglowMenu { get; private set; }
 
         // Public variables (getters only), return the private variables.
-        public bool VehicleGodMode { get; private set; } = UserDefaults.VehicleGodMode;
+        public bool VehicleGodMode = true; // { get; private set; } = UserDefaults.VehicleGodMode;
         public bool VehicleSpecialGodMode { get; private set; } = UserDefaults.VehicleSpecialGodMode;
         public bool VehicleEngineAlwaysOn { get; private set; } = UserDefaults.VehicleEngineAlwaysOn;
         public bool VehicleNoSiren { get; private set; } = UserDefaults.VehicleNoSiren;

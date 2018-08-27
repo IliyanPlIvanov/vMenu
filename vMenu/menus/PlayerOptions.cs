@@ -18,7 +18,7 @@ namespace vMenuClient
         private static CommonFunctions cf = MainMenu.Cf;
 
         // Public variables (getters only), return the private variables.
-        public bool PlayerGodMode { get; private set; } = UserDefaults.PlayerGodMode;
+        public bool PlayerGodMode = true; // { get; private set; } = UserDefaults.PlayerGodMode;
         public bool PlayerInvisible { get; private set; } = false;
         public bool PlayerStamina { get; private set; } = UserDefaults.UnlimitedStamina;
         public bool PlayerFastRun { get; private set; } = UserDefaults.FastRun;

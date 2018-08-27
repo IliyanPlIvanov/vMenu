@@ -61,6 +61,7 @@
     <Compile Include="MainMenu.cs" />
     <Compile Include="menus\About.cs" />
     <Compile Include="menus\BannedPlayers.cs" />
+    <Compile Include="menus\TpToLocation.cs" />
     <Compile Include="menus\MiscSettings.cs" />
     <Compile Include="menus\OnlinePlayers.cs" />
     <Compile Include="menus\PlayerAppearance.cs" />

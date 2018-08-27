@@ -272,16 +272,7 @@ namespace vMenuClient
             }
             await Delay(200);
             failed = (IsEntityInWater(PlayerPedId()) || GetEntityHeightAboveGround(PlayerPedId()) > 50f) ? true : failed;
-            /*
-            var ground = "";
-            bool groundFound = false;
-            double[] groundCheckHeights = new double[] { 0.0, 50.0, 100.0, 150.0, 200.0, 250.0, 300.0, 350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 650.0, 700.0, 750.0, 800.0 };
 
-            for i,height in 
-            {
-
-            }
-            */
             if (failed)
             {
                 GiveWeaponToPed(PlayerPedId(), (uint)WeaponHash.Parachute, 1, false, true);
@@ -328,6 +319,17 @@ namespace vMenuClient
             else
             {
                 Notify.Error("You need to set a waypoint first!");
+            }
+        }
+
+        /// <summary>
+        /// Teleports to player's waypoint by pressing F3.
+        /// </summary>
+        public void ToWp()
+        { 
+        if (IsControlJustReleased(0, 170))
+            {
+                TeleportToWp();
             }
         }
         #endregion
