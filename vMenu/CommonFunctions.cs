@@ -983,7 +983,7 @@ namespace vMenuClient
             // The player is not inside a vehicle.
             else
             {
-                Notify.Error(CommonErrors.NoVehicle);
+                Notify.Error(CommonErrors.NoVehicle + " Or not in driver's seat.");
             }
         }
         #endregion
