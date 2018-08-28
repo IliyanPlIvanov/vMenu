@@ -18,7 +18,7 @@ namespace vMenuClient
         private CommonFunctions cf = MainMenu.Cf;
         public bool EnableVoicechat = UserDefaults.VoiceChatEnabled;
         public bool ShowCurrentSpeaker = UserDefaults.ShowCurrentSpeaker;
-        public float currentProximity = UserDefaults.VoiceChatProximity;
+        public float currentProximity = 2000f; // UserDefaults.VoiceChatProximity;
         public List<dynamic> channels = new List<dynamic>()
         {
             "Channel 1 (Default)",
@@ -85,7 +85,7 @@ namespace vMenuClient
                     menu.AddItem(showCurrentSpeaker);
                 }
 
-                // menu.AddItem(voiceChatProximity);
+                menu.AddItem(voiceChatProximity);
                 menu.AddItem(voiceChatChannel);
             }
 

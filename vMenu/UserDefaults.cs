@@ -191,7 +191,7 @@ namespace vMenuClient
         public static float VoiceChatProximity
         {
             get { return GetSettingsFloat("voiceChatProximity"); }
-            set { SetSavedSettingsFloat("voiceChatProximity", 1); }
+            set { SetSavedSettingsFloat("voiceChatProximity", value); }
         }
 
         public static bool ShowCurrentSpeaker
@@ -366,8 +366,8 @@ namespace vMenuClient
                 VoiceChatEnabled = MainMenu.VoiceChatSettingsMenu.EnableVoicechat;
                 prefs.Add("voiceChatEnabled", MainMenu.VoiceChatSettingsMenu.EnableVoicechat);
 
-                VoiceChatProximity = MainMenu.VoiceChatSettingsMenu.currentProximity;
-                prefs.Add("voiceChatProximity", MainMenu.VoiceChatSettingsMenu.currentProximity);
+                VoiceChatProximity = 2000f; // MainMenu.VoiceChatSettingsMenu.currentProximity;
+                prefs.Add("voiceChatProximity", 2000f); // MainMenu.VoiceChatSettingsMenu.currentProximity);
             }
 
             if (MainMenu.WeaponOptionsMenu != null)
