@@ -1191,7 +1191,7 @@ namespace vMenuClient
                 "vehicle. Note not all vehicles have lights.");
             UIMenuCheckboxItem underglowRight = new UIMenuCheckboxItem("Enable Right Light", false, "Enable or disable the underglow on the back side of the " +
                 "vehicle. Note not all vehicles have lights.");
-            var underglowColorsList = new List<dynamic>() { "Red", "Pink", "Purple", "Blacklight", "Dark Blue", "Light Blue", "White", "Lime", "Green", "Dark Green", "Gold", "Orange", "Yellow", "Cream", "Lava Red", "Grace Red" };
+            var underglowColorsList = new List<dynamic>() { "Red", "Pink", "Purple", "Blacklight", "Dark Blue", "Light Blue", "White", "Lime", "Green", "Dark Green", "Gold", "Orange", "Yellow", "Cream", "Lava Red", "Grace Red", "Garnet Red", "Wine Red", "Pony Pink", "Fluorescent Pink", "Light Pink", "Hot Pink", "Salmon Pink", "Light Orange", "Gold", "Light Gold", "Bronze", "Flur Yellow", "Flurorescent Yellow", "Mint Green", "Fluorescent Green", "Sea Green", "Bright Green", "Petrol Green", "Electric Blue", "Midnight Blue", "Galaxy Blue", "Blue", "Racing Blue", "Spin Purple", "Might Purple", "Bright Purple" };
             UIMenuListItem underglowColor = new UIMenuListItem("Underglow Color", underglowColorsList, 0, "Select the color of the underglow.");
 
             VehicleUnderglowMenu.AddItem(underglowFront);
@@ -1684,6 +1684,58 @@ namespace vMenuClient
                     return System.Drawing.Color.FromArgb(red: 105, green: 0, blue: 0); // Lava Red
                 case 15:
                     return System.Drawing.Color.FromArgb(red: 74, green: 10, blue: 10); // Grace Red
+                case 16:
+                    return System.Drawing.Color.FromArgb(red: 71, green: 14, blue: 14); // Garnet Red
+                case 17:
+                    return System.Drawing.Color.FromArgb(red: 8, green: 0, blue: 0); // Wine Red
+                case 18:
+                    return System.Drawing.Color.FromArgb(red: 255, green: 50, blue: 100); // Pony Pink
+                case 19:
+                    return System.Drawing.Color.FromArgb(red: 255, green: 5, blue: 190); // Fluorescent Pink
+                case 20:
+                    return System.Drawing.Color.FromArgb(red: 38, green: 3, blue: 11); // Light Pink
+                case 21:
+                    return System.Drawing.Color.FromArgb(red: 99, green: 0, blue: 18); // Hot Pink
+                case 22:
+                    return System.Drawing.Color.FromArgb(red: 143, green: 47, blue: 85); // Salmon Pink
+                case 23:
+                    return System.Drawing.Color.FromArgb(red: 107, green: 11, blue: 0); // Light Orange
+                case 24:
+                    return System.Drawing.Color.FromArgb(red: 255, green: 62, blue: 0); // Gold
+                case 25:
+                    return System.Drawing.Color.FromArgb(red: 194, green: 102, blue: 16); // Light Gold
+                case 26:
+                    return System.Drawing.Color.FromArgb(red: 74, green: 52, blue: 27); // Bronze
+                case 27:
+                    return System.Drawing.Color.FromArgb(red: 162, green: 168, blue: 39); // Flur Yellow
+                case 28:
+                    return System.Drawing.Color.FromArgb(red: 255, green: 255, blue: 0); // Flurorescent Yellow
+                case 29:
+                    return System.Drawing.Color.FromArgb(red: 0, green: 255, blue: 140); // Mint Green
+                case 30:
+                    return System.Drawing.Color.FromArgb(red: 94, green: 255, blue: 1); // Fluorescent Green
+                case 31:
+                    return System.Drawing.Color.FromArgb(red: 0, green: 33, blue: 30); // Sea Green
+                case 32:
+                    return System.Drawing.Color.FromArgb(red: 0, green: 56, blue: 5); // Bright Green
+                case 33:
+                    return System.Drawing.Color.FromArgb(red: 11, green: 65, blue: 69); // Petrol Green
+                case 34:
+                    return System.Drawing.Color.FromArgb(red: 3, green: 83, blue: 255); // Electric Blue
+                case 35:
+                    return System.Drawing.Color.FromArgb(red: 0, green: 1, blue: 8); // Midnight Blue
+                case 36:
+                    return System.Drawing.Color.FromArgb(red: 0, green: 13, blue: 20); // Galaxy Blue
+                case 37:
+                    return System.Drawing.Color.FromArgb(red: 0, green: 27, blue: 87); // Blue
+                case 38:
+                    return System.Drawing.Color.FromArgb(red: 14, green: 49, blue: 109); // Racing Blue
+                case 39:
+                    return System.Drawing.Color.FromArgb(red: 26, green: 24, blue: 46); // Spin Purple
+                case 40:
+                    return System.Drawing.Color.FromArgb(red: 5, green: 0, blue: 8); // Might Purple
+                case 41:
+                    return System.Drawing.Color.FromArgb(red: 50, green: 6, blue: 66); // Bright Purple
                 default:
                     return System.Drawing.Color.FromArgb(red: 255, green: 255, blue: 255); // white
             }
