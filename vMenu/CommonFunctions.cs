@@ -856,7 +856,7 @@ namespace vMenuClient
         public async void SaveVehicle(string updateExistingSavedVehicleName = null)
         {
             // Only continue if the player is in a vehicle.
-            if (IsPedInAnyVehicle(PlayerPedId(), false))
+            if ((IsPedInAnyVehicle(PlayerPedId(), false)) && (GetPedInVehicleSeat(GetVehicle(), -1) == GetPlayerPed(-1)))
             {
                 // Get the vehicle.
                 Vehicle veh = new Vehicle(GetVehicle());
