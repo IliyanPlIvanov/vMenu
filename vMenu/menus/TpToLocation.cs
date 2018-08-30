@@ -82,7 +82,7 @@ namespace vMenuClient
                 }
                 else if (item == gotoLakeTouge)
                 {
-                    SetPedCoordsKeepVehicle(PlayerPedId(), 1932.36f, 440.30f, 218.50f);
+                    SetPedCoordsKeepVehicle(PlayerPedId(), 1953.0f, 419.0f, 130.0f);
                 }
                 else if (item == gotoLookoutPoint)
                 {

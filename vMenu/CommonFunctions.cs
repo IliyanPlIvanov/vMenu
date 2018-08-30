@@ -321,17 +321,6 @@ namespace vMenuClient
                 Notify.Error("You need to set a waypoint first!");
             }
         }
-
-        /// <summary>
-        /// Teleports to player's waypoint by pressing F3.
-        /// </summary>
-        public void ToWp()
-        { 
-        if (IsControlJustReleased(0, 170))
-            {
-                TeleportToWp();
-            }
-        }
         #endregion
 
         #region Kick Player

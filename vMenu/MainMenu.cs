@@ -482,6 +482,15 @@ namespace vMenuClient
 
                         }
                     }
+
+                    // Teleport to WP when F3 is pressed
+                    if (Game.CurrentInputMode == InputMode.MouseAndKeyboard)
+                    {
+                        if (Game.IsControlJustPressed(0, Control.SaveReplayClip))
+                        {
+                            Cf.TeleportToWp();
+                        }
+                    }
                 }
                 // If the pause menu is active or all menus should be closed, close all menus.
                 else
