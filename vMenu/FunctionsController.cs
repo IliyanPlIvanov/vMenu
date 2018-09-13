@@ -37,7 +37,8 @@ namespace vMenuClient
         private string crossingName = "";
         private string suffix = "";
         private bool wasMenuJustOpen = false;
-        //private PlayerList blipsPlayerList = new PlayerList();`
+        private PlayerList blipsPlayerList = new PlayerList();
+        private List<int> waypointPlayerIdsToRemove = new List<int>();
 
         /// <summary>
         /// Constructor.
@@ -51,21 +52,22 @@ namespace vMenuClient
             }
 
             // Add all tick events.
-            Tick += GeneralTasks;         // barely any / no memory leaks
-            Tick += PlayerOptions;        // big memory leaks
-            Tick += VehicleOptions;       // small memory leaks
-            Tick += MoreVehicleOptions;   // very small memory leaks, once every couple of seconds
-            Tick += VoiceChat;            // 
-            Tick += TimeOptions;          // 
-            Tick += _WeatherOptions;      // 
-            Tick += WeaponOptions;        // 
+            Tick += GeneralTasks;
+            Tick += PlayerOptions;
+            Tick += VehicleOptions;
+            Tick += MoreVehicleOptions;
+            Tick += VoiceChat;
+            Tick += TimeOptions;
+            Tick += _WeatherOptions;
+            Tick += WeaponOptions;
+            Tick += OnlinePlayersTasks;
 
             Tick += MiscSettings;
             Tick += DeathNotifications;
             Tick += JoinQuitNotifications;
             Tick += UpdateLocation;
             Tick += ManageCamera;
-            //Tick += PlayerBlipsControl;
+            Tick += PlayerBlipsControl;
         }
 
         /// Task related
@@ -964,116 +966,110 @@ namespace vMenuClient
             }
         }
         #endregion
-        /*
-                private async Task PlayerBlipsControl()
+
+        #region player blips tasks
+        private async Task PlayerBlipsControl()
+        {
+            if (MainMenu.MiscSettingsMenu != null)
+            {
+                bool enabled = MainMenu.MiscSettingsMenu.ShowPlayerBlips && cf.IsAllowed(Permission.MSPlayerBlips);
+
+                blipsPlayerList = new PlayerList();
+                foreach (Player p in blipsPlayerList)
                 {
-                    if (MainMenu.MiscSettingsMenu != null)
+                    if (enabled)
                     {
-                        bool enabled = MainMenu.MiscSettingsMenu.ShowPlayerBlips && cf.IsAllowed(Permission.MSPlayerBlips);
-
-                        blipsPlayerList = new PlayerList();
-                        foreach (Player p in blipsPlayerList)
+                        if (p != Game.Player)
                         {
-                            if (enabled)
+                            if (p.Character.AttachedBlip == null || !p.Character.AttachedBlip.Exists())
                             {
-                                if (p.Character.AttachedBlip == null || !p.Character.AttachedBlip.Exists())
-                                {
-                                    Debug.WriteLine("New blip added.");
-                                    p.Character.AttachBlip();
-                                }
-                                p.Character.AttachedBlip.Color = BlipColor.White;
-                                //Debug.Write(p.Character.AttachedBlip.Sprite.ToString());
+                                Debug.WriteLine("New blip added.");
+                                p.Character.AttachBlip();
+                            }
+                            p.Character.AttachedBlip.Color = BlipColor.White;
+                            if (!IsPedInAnyVehicle(PlayerPedId(), false))
+                            {
                                 ShowHeadingIndicatorOnBlip(p.Character.AttachedBlip.Handle, true);
-                                p.Character.AttachedBlip.IsShortRange = true;
-                                p.Character.AttachedBlip.Name = p.Name;
-
-
-                                if (IsPedInAnyVehicle(p.Character.Handle, false))
-                                {
-                                    Vehicle veh = new Vehicle(cf.GetVehicle(p.Handle, false));
-                                    if (veh.Model.IsBoat)
-                                    {
-                                        p.Character.AttachedBlip.Sprite = BlipSprite.Speedboat; // 427 = speed boat
-                                    }
-                                    else if (veh.Model.IsBicycle)
-                                    {
-                                        p.Character.AttachedBlip.Sprite = BlipSprite
-                                    }
-                                    else if (veh.Model.IsBike)
-                                    {
-                                        p.Character.AttachedBlip.Sprite = BlipSprite
-                                    }
-                                    else if (veh.Model.IsCar)
-                                    {
-                                        switch ((VehicleHash)veh.Model.Hash)
-                                        {
-                                            case VehicleHash.Apc:
-                                                break;
-                                            default:
-                                                break;
-                                        }
-                                        //if (veh.Model.Hash == VehicleHash.Apc)
-                                        //p.Character.AttachedBlip.Sprite = BlipSprite
-                                    }
-                                    else if (veh.Model.IsHelicopter)
-                                    {
-                                        p.Character.AttachedBlip.Sprite = BlipSprite.HelicopterAnimated;
-                                    }
-                                    else if (veh.Model.IsPlane)
-                                    {
-                                        p.Character.AttachedBlip.Sprite = BlipSprite
-                                    }
-                                    else if (veh.Model.IsQuadbike)
-                                    {
-                                        p.Character.AttachedBlip.Sprite = BlipSprite.
-                                    }
-                                    else
-                                    {
-                                        p.Character.AttachedBlip.Sprite = BlipSprite.Standard;
-                                    }
-                                    //if (p.Character.IsInBoat)
-                                    //{
-                                    //    p.Character.AttachedBlip.Sprite = BlipSprite.Speedboat; // 427 = Speedboat
-                                    //}
-                                    //else if (p.Character.IsInPlane)
-                                    //{
-
-                                    //}
-                                    //else if (p.Character.IsInHeli)
-                                    //{
-
-                                    //}
-                                    //else if (p.Character.IsOnBike)
-                                    //{
-
-                                    //}
-
-                                    veh = null;
-                                }
-                                else
-                                {
-                                    p.Character.AttachedBlip.Sprite = BlipSprite.Standard;
-                                }
                             }
                             else
                             {
-                                if (!(p.Character.AttachedBlip == null || !p.Character.AttachedBlip.Exists()))
-                                {
-                                    p.Character.AttachedBlip.Delete();
-                                }
+                                ShowHeadingIndicatorOnBlip(p.Character.AttachedBlip.Handle, false);
                             }
 
+                            p.Character.AttachedBlip.IsShortRange = true;
 
-                            await Delay(60); // wait 60 ticks before doing the next player.
+                            cf.SetCorrectBlipSprite(p.Character.Handle, p.Character.AttachedBlip.Handle);
+                            p.Character.AttachedBlip.Name = p.Name;
+
+                            if (!p.Character.IsInHeli)
+                            {
+                                p.Character.AttachedBlip.Rotation = (int)GetEntityHeading(p.Character.Handle);
+                            }
                         }
-                        await Delay(1000); // wait 1000 ticks before doing the next loop.
                     }
                     else
                     {
-                        await Delay(1000);
+                        if (!(p.Character.AttachedBlip == null || !p.Character.AttachedBlip.Exists()))
+                        {
+                            p.Character.AttachedBlip.Delete();
+                        }
                     }
+
+
+                    await Delay(0); // wait 0 ticks before doing the next player.
                 }
-        */
+                await Delay(1); // wait 1 tick before doing the next loop.
+            }
+            else
+            {
+                await Delay(1000);
+            }
+        }
+
+        #endregion
+
+        #region Online Player Options Tasks
+        private async Task OnlinePlayersTasks()
+        {
+            await Delay(500);
+            if (MainMenu.OnlinePlayersMenu != null && MainMenu.OnlinePlayersMenu.PlayersWaypointList.Count > 0)
+            {
+                foreach (int playerId in MainMenu.OnlinePlayersMenu.PlayersWaypointList)
+                {
+                    if (!NetworkIsPlayerActive(playerId))
+                    {
+                        waypointPlayerIdsToRemove.Add(playerId);
+                    }
+                    else
+                    {
+                        Vector3 pos1 = GetEntityCoords(GetPlayerPed(playerId), true);
+                        Vector3 pos2 = Game.PlayerPed.Position;
+                        if (Vdist2(pos1.X, pos1.Y, pos1.Z, pos2.X, pos2.Y, pos2.Z) < 20f)
+                        {
+                            int blip = GetBlipFromEntity(GetPlayerPed(playerId));
+                            if (DoesBlipExist(blip))
+                            {
+                                SetBlipRoute(blip, false);
+                                RemoveBlip(ref blip);
+                                waypointPlayerIdsToRemove.Add(playerId);
+                                Notify.Custom($"~g~You've reached ~s~<C>{GetPlayerName(playerId)}</C>'s~g~ location, disabling GPS route.");
+                            }
+                        }
+                    }
+                    await Delay(10);
+                }
+                if (waypointPlayerIdsToRemove.Count > 0)
+                {
+                    foreach (int id in waypointPlayerIdsToRemove)
+                    {
+                        MainMenu.OnlinePlayersMenu.PlayersWaypointList.Remove(id);
+                    }
+                    await Delay(10);
+                }
+                waypointPlayerIdsToRemove.Clear();
+            }
+        }
+        #endregion
 
         /// Not task related
         #region Private ShowSpeed Functions

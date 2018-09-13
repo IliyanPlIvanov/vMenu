@@ -286,7 +286,6 @@ namespace vMenuServer
             "WPSmokeGrenade",
 
             // Misc Settings
-            //"MSMenu", (removed because this menu should always be allowed).
             "MSAll",
             "MSClearArea",
             "MSTeleportToWp",
@@ -296,7 +295,9 @@ namespace vMenuServer
             "MSDeathNotifs",
             "MSNightVision",
             "MSThermalVision",
-            "MSLocationBlips",
+            //"MSLocationBlips", // not yet implemented
+            "MSPlayerBlips",
+            "MSConnectionMenu",
 
             // Voice Chat
             "VCMenu",
@@ -315,7 +316,7 @@ namespace vMenuServer
         /// </summary>
         public MainServer()
         {
-            RegisterCommand("vmenuserver", new Action<int, List<object>, string>((int source, List<object> args, string rawCommand) =>
+            RegisterCommand("vmenuserver", new Action<int, List<object>, string>(async (int source, List<object> args, string rawCommand) =>
             {
                 if (args != null)
                 {
@@ -341,11 +342,11 @@ namespace vMenuServer
                                 string name = args[1].ToString().Trim();
                                 name = name.Replace("\"", "");
                                 name = BanManager.GetSafePlayerName(name);
-                                var bans = BanManager.GetBanList();
+                                var bans = await BanManager.GetBanList();
                                 var banRecord = bans.Find(b => { return b.playerName == name; });
                                 if (banRecord.playerName != null)
                                 {
-                                    if (BanManager.RemoveBan(banRecord))
+                                    if (await BanManager.RemoveBan(banRecord))
                                     {
                                         Debug.WriteLine("Player has been successfully unbanned.");
                                     }
@@ -825,7 +826,7 @@ namespace vMenuServer
                     (date.Minute < 10 ? "0" : "") + date.Minute + ":" +
                     (date.Second < 10 ? "0" : "") + date.Second;
                 string outputFile = file + $"[\t{formattedDate}\t] [KICK ACTION] {kickLogMesage}\n";
-                SaveResourceFile(GetCurrentResourceName(), "vmenu.log", outputFile, outputFile.Length);
+                SaveResourceFile(GetCurrentResourceName(), "vmenu.log", outputFile, -1);
                 Debug.Write(kickLogMesage + "\n");
             }
         }

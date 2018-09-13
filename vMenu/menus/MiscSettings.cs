@@ -82,8 +82,8 @@ namespace vMenuClient
             connectionSubmenu.AddItem(quitGame);
             connectionSubmenu.AddItem(disconnectFromServer);
 
-            //UIMenuCheckboxItem locationBlips = new UIMenuCheckboxItem("Location Blips", ShowLocationBlips, "Shows blips on the map for some common locations.");
-            //UIMenuCheckboxItem playerBlips = new UIMenuCheckboxItem("Show Player Blips", ShowPlayerBlips, "Shows blips on the map for all players.");
+            UIMenuCheckboxItem locationBlips = new UIMenuCheckboxItem("Location Blips", ShowLocationBlips, "Shows blips on the map for some common locations.");
+            UIMenuCheckboxItem playerBlips = new UIMenuCheckboxItem("Show Player Blips", ShowPlayerBlips, "Shows blips on the map for all players.");
 
             MainMenu.Mp.Add(connectionSubmenu);
             connectionSubmenu.RefreshIndex();
@@ -143,18 +143,18 @@ namespace vMenuClient
             }
             //if (cf.IsAllowed(Permission.MSLocationBlips))
             //{
-            //menu.AddItem(locationBlips);
-            //if (!MainMenu.EnableExperimentalFeatures)
-            //{
-            //locationBlips.Enabled = false;
-            //locationBlips.SetLeftBadge(UIMenuItem.BadgeStyle.Lock);
-            //locationBlips.Description = "This experimental feature is not yet available, more details will be published on the forum thread soon.";
+            //    menu.AddItem(locationBlips);
+            //    if (!MainMenu.EnableExperimentalFeatures)
+            //    {
+            //        locationBlips.Enabled = false;
+            //        locationBlips.SetLeftBadge(UIMenuItem.BadgeStyle.Lock);
+            //        locationBlips.Description = "This experimental feature is not yet available, more details will be published on the forum thread soon.";
+            //    }
             //}
-            //}
-            //if (cf.IsAllowed(Permission.MSPlayerBlips))
-            //{
-            //menu.AddItem(playerBlips);
-            //}
+            if (cf.IsAllowed(Permission.MSPlayerBlips))
+            {
+                menu.AddItem(playerBlips);
+            }
             if (cf.IsAllowed(Permission.MSClearArea))
             {
                 menu.AddItem(clearArea);
@@ -218,15 +218,15 @@ namespace vMenuClient
                 {
                     LockCameraY = _checked;
                 }
-                //else if (item == locationBlips)
-                //{
-                //ToggleBlips(_checked);
-                //ShowLocationBlips = _checked;
-                //}
-                //else if (item == playerBlips)
-                //{
-                //ShowPlayerBlips = _checked;
-                //}
+                else if (item == locationBlips)
+                {
+                    ToggleBlips(_checked);
+                    ShowLocationBlips = _checked;
+                }
+                else if (item == playerBlips)
+                {
+                    ShowPlayerBlips = _checked;
+                }
             };
 
             // Handle button presses.
@@ -304,13 +304,13 @@ namespace vMenuClient
 
         //};
 
-        //private void ToggleBlips(bool enable)
-        //{
-        //    if (enable)
-        //    {
+        private void ToggleBlips(bool enable)
+        {
+            if (enable)
+            {
 
-        //    }
-        //}
+            }
+        }
 
     }
 }
