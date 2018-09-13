@@ -220,7 +220,7 @@ namespace vMenuClient
             if (!exists)
             {
                 // Some options should be enabled by default:
-                if (kvpString == "playerGodMode" || kvpString == "vehicleGodMode" || kvpString == "unlimitedStamina" || kvpString == "miscDeathNotifications" || kvpString == "miscJoinQuitNotifications" || kvpString == "vehicleSpawnerSpawnInside" || kvpString == "vehicleSpawnerReplacePrevious" || kvpString == "neverWanted" || kvpString == "voiceChatShowSpeaker" || kvpString == "voiceChatEnabled" || kvpString == "autoEquipParachuteWhenInPlane")
+                if (kvpString == "playerGodMode" || kvpString == "vehicleGodMode" || kvpString == "miscShowPlayerBlips" || kvpString == "unlimitedStamina" || kvpString == "miscDeathNotifications" || kvpString == "miscJoinQuitNotifications" || kvpString == "vehicleSpawnerSpawnInside" || kvpString == "vehicleSpawnerReplacePrevious" || kvpString == "neverWanted" || kvpString == "voiceChatShowSpeaker" || kvpString == "voiceChatEnabled" || kvpString == "autoEquipParachuteWhenInPlane")
                 {
                     SetSavedSettingsBool(kvpString, true);
                     return true;
