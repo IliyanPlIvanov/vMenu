@@ -650,7 +650,7 @@ namespace vMenuServer
             }
             else
             {
-                BanManager.BanCheater(new PlayerList()[target]);
+                BanManager.BanCheater(source);
             }
         }
 
@@ -675,7 +675,7 @@ namespace vMenuServer
             }
             else
             {
-                BanManager.BanCheater(new PlayerList()[target]);
+                BanManager.BanCheater(source);
             }
         }
 
@@ -700,7 +700,7 @@ namespace vMenuServer
             }
             else
             {
-                BanManager.BanCheater(new PlayerList()[target]);
+                BanManager.BanCheater(source);
             }
         }
         #endregion
@@ -815,7 +815,7 @@ namespace vMenuServer
         /// <param name="kickLogMesage"></param>
         private static void KickLog(string kickLogMesage)
         {
-            if (GetConvar("vMenuLogKickActions", "false") == "true")
+            if (GetConvar("vMenuLogKickActions", "true") == "true")
             {
                 string file = LoadResourceFile(GetCurrentResourceName(), "vmenu.log") ?? "";
                 DateTime date = DateTime.Now;
