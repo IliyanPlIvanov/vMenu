@@ -49,7 +49,7 @@ namespace vMenuClient
             // Add the items to the menu.
             if (cf.IsAllowed(Permission.VSSpawnByName))
             {
-                menu.AddItem(spawnByName);
+               // menu.AddItem(spawnByName);
             }
             //menu.AddItem(spawnInVeh);
             //menu.AddItem(replacePrev);
