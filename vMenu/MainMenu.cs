@@ -47,7 +47,7 @@ namespace vMenuClient
         public static MiscSettings MiscSettingsMenu { get; private set; }
         public static VoiceChat VoiceChatSettingsMenu { get; private set; }
         public static About AboutMenu { get; private set; }
-        public static TpToLocation TpToLocation { get; private set; }
+        // public static TpToLocation TpToLocation { get; private set; }
         public static UIMenu NoClipMenu { get; } = new NoclipMenu().GetMenu();
         public static bool NoClipEnabled { get; set; } = false;
 
@@ -667,12 +667,14 @@ namespace vMenuClient
                 AddMenu(menu, button);
             }
 
+            /*
             // Add TpToLocation Menu.
             TpToLocation = new TpToLocation();
             UIMenu tpsub = TpToLocation.GetMenu();
             UIMenuItem tpbtn = new UIMenuItem("TP to Location", "Teleport to location on the map/custom map");
             tpbtn.SetRightLabel("→→→");
             AddMenu(tpsub, tpbtn);
+            */
 
             // Add the vehicle options Menu.
             if (Cf.IsAllowed(Permission.VOMenu))

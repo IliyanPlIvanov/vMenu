@@ -131,9 +131,6 @@ namespace vMenuClient
                 menu.AddItem(connectionSubmenuBtn);
                 connectionSubmenuBtn.SetRightLabel("→→→");
             }
-
-            menu.AddItem(connectionSubmenuBtn);
-
             if (cf.IsAllowed(Permission.MSShowCoordinates))
             {
                 menu.AddItem(coords);
