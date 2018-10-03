@@ -378,6 +378,7 @@ namespace vMenuClient
 
                 ShowVoiceStatus = MainMenu.VoiceChatSettingsMenu.ShowVoiceStatus;
                 prefs.Add("voiceChatShowVoiceStatus", MainMenu.VoiceChatSettingsMenu.ShowVoiceStatus);
+
                 VoiceChatProximity = 2000f; // MainMenu.VoiceChatSettingsMenu.currentProximity;
                 prefs.Add("voiceChatProximity", 2000f); // MainMenu.VoiceChatSettingsMenu.currentProximity);
             }

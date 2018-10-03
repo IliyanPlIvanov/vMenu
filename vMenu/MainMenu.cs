@@ -8,6 +8,8 @@ using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
 using NativeUI;
 using System.Dynamic;
+using System.Drawing;
+using CitizenFX.Core.UI;
 using static vMenuShared.ConfigManager;
 
 namespace vMenuClient
@@ -785,6 +787,11 @@ namespace vMenuClient
             Mp.ControlDisablingEnabled = false;
             // Globally disable the "mouse edge" feature.
             Mp.MouseEdgeEnabled = false;
+
+            if (!GetSettingsBool(SettingsCategory.permissions, Setting.use_permissions))
+            {
+                Notify.Info("vMenu is set up to ignore permissions.");
+            }
         }
         #endregion
     }
