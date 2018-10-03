@@ -670,7 +670,6 @@ namespace vMenuServer
 
                         KickLog($"Player: {source.Name} has kicked: {targetPlayer.Name} for: {kickReason}.");
                         TriggerClientEvent(player: source, eventName: "vMenu:Notify", args: $"The target player (<C>{targetPlayer.Name}</C>) has been kicked.");
-                        TriggerEvent("chatMessage", "", $"{source.Name} has kicked: {targetPlayer.Name} Reason: {kickReason}.");
 
                         // Kick the player from the server using the specified reason.
                         DropPlayer(targetPlayer.Handle, kickReason);
