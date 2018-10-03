@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
 using NativeUI;
-using System.Drawing; //added by me
-using CitizenFX.Core.UI; //added by me
+using Newtonsoft.Json;
 
 namespace vMenuClient
 {
@@ -29,6 +28,8 @@ namespace vMenuClient
         public bool LockCameraY { get; private set; } = false;
         public bool ShowLocationBlips { get; private set; } = UserDefaults.MiscLocationBlips;
         public bool ShowPlayerBlips { get; private set; } = UserDefaults.MiscShowPlayerBlips;
+        private List<Vector3> tpLocations = new List<Vector3>();
+        private List<float> tpLocationsHeading = new List<float>();
 
         /// <summary>
         /// Creates the menu.
@@ -45,9 +46,19 @@ namespace vMenuClient
                 ControlDisablingEnabled = false
             };
 
+            UIMenu teleportMenu = new UIMenu(GetPlayerName(PlayerId()), "Teleport Locations", true)
+            {
+                ScaleWithSafezone = false,
+                MouseControlsEnabled = false,
+                MouseEdgeEnabled = false,
+                ControlDisablingEnabled = false
+            };
+            UIMenuItem teleportMenuBtn = new UIMenuItem("Teleport Locations", "Teleport to pre-configured locations, added by the server owner.");
+            menu.BindMenuToItem(teleportMenu, teleportMenuBtn);
+            MainMenu.Mp.Add(teleportMenu);
+
             // Create the menu items.
             UIMenuItem tptowp = new UIMenuItem("Teleport To Waypoint", "Teleport to the waypoint on your map.");
-
             UIMenuCheckboxItem speedKmh = new UIMenuCheckboxItem("Show Speed KM/H", ShowSpeedoKmh, "Show a speedometer on your screen indicating your speed in KM/h.");
             UIMenuCheckboxItem speedMph = new UIMenuCheckboxItem("Show Speed MPH", ShowSpeedoMph, "Show a speedometer on your screen indicating your speed in MPH.");
             UIMenuCheckboxItem coords = new UIMenuCheckboxItem("Show Coordinates", ShowCoordinates, "Show your current coordinates at the top of your screen.");
@@ -113,8 +124,14 @@ namespace vMenuClient
             }
 
             // Always allowed
-            //menu.AddItem(speedKmh);
-            //menu.AddItem(speedMph);
+            // menu.AddItem(speedKmh);
+            // menu.AddItem(speedMph);
+            if (cf.IsAllowed(Permission.MSConnectionMenu))
+            {
+                menu.AddItem(connectionSubmenuBtn);
+                connectionSubmenuBtn.SetRightLabel("→→→");
+            }
+
             menu.AddItem(connectionSubmenuBtn);
 
             if (cf.IsAllowed(Permission.MSShowCoordinates))
@@ -141,19 +158,51 @@ namespace vMenuClient
             {
                 menu.AddItem(thermalVision);
             }
-            //if (cf.IsAllowed(Permission.MSLocationBlips))
-            //{
-            //    menu.AddItem(locationBlips);
-            //    if (!MainMenu.EnableExperimentalFeatures)
-            //    {
-            //        locationBlips.Enabled = false;
-            //        locationBlips.SetLeftBadge(UIMenuItem.BadgeStyle.Lock);
-            //        locationBlips.Description = "This experimental feature is not yet available, more details will be published on the forum thread soon.";
-            //    }
-            //}
+            if (cf.IsAllowed(Permission.MSLocationBlips))
+            {
+                menu.AddItem(locationBlips);
+                ToggleBlips(ShowLocationBlips);
+            }
             if (cf.IsAllowed(Permission.MSPlayerBlips))
             {
                 menu.AddItem(playerBlips);
+            }
+            if (cf.IsAllowed(Permission.MSTeleportLocations))
+            {
+                menu.AddItem(teleportMenuBtn);
+                teleportMenuBtn.SetRightLabel("→→→");
+
+                string json = LoadResourceFile(GetCurrentResourceName(), "config/locations.json");
+                if (string.IsNullOrEmpty(json))
+                {
+                    Notify.Error("An error occurred while loading the locations file.");
+                }
+                else
+                {
+                    try
+                    {
+                        Newtonsoft.Json.Linq.JObject data = JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JObject>(json);
+                        foreach (Newtonsoft.Json.Linq.JToken teleport in data["teleports"])
+                        {
+                            string name = teleport["name"].ToString();
+                            float heading = (float)teleport["heading"];
+                            Vector3 coordinates = new Vector3((float)teleport["coordinates"]["x"], (float)teleport["coordinates"]["y"], (float)teleport["coordinates"]["z"]);
+                            UIMenuItem tpBtn = new UIMenuItem(name, $"Teleport to X: {(int)coordinates.X} Y: {(int)coordinates.Y} Z: {(int)coordinates.Z} HEADING: {(int)heading}.");
+                            teleportMenu.AddItem(tpBtn);
+                            tpLocations.Add(coordinates);
+                            tpLocationsHeading.Add(heading);
+                        }
+                        teleportMenu.OnItemSelect += async (sender, item, index) =>
+                        {
+                            await cf.TeleportToCoords(tpLocations[index]);
+                            SetEntityHeading(PlayerPedId(), tpLocationsHeading[index]);
+                        };
+                    }
+                    catch (JsonReaderException ex)
+                    {
+                        Debug.Write($"\n[vMenu] An error occurred whie loading the teleport locations!\nReport the following error details to the server owner:\n{ex.Message}.\n");
+                    }
+                }
             }
             if (cf.IsAllowed(Permission.MSClearArea))
             {
@@ -253,6 +302,10 @@ namespace vMenuClient
                     ClearAreaOfEverything(pos.X, pos.Y, pos.Z, 100f, false, false, false, false);
                 }
             };
+
+
+
+
         }
 
         /// <summary>
@@ -270,49 +323,81 @@ namespace vMenuClient
 
         private struct Blip
         {
-            readonly Vector3 Location;
-            readonly int Sprite;
-            readonly string Name;
-            readonly int Color;
+            public readonly Vector3 Location;
+            public readonly int Sprite;
+            public readonly string Name;
+            public readonly int Color;
+            public readonly int blipID;
 
-            public Blip(Vector3 Location, int Sprite, string Name)
-            {
-                this.Location = Location;
-                this.Sprite = Sprite;
-                this.Name = Name;
-                Color = 0;
-            }
-
-            public Blip(Vector3 Location, int Sprite, string Name, int Color)
+            public Blip(Vector3 Location, int Sprite, string Name, int Color, int blipID)
             {
                 this.Location = Location;
                 this.Sprite = Sprite;
                 this.Name = Name;
                 this.Color = Color;
+                this.blipID = blipID;
             }
         }
 
-        //private readonly List<Blip> blips = new List<Blip>()
-        //{
-        //    // airports
-        //    new Blip(new Vector3(-1089f, -2791f, 50f), 90, GetLabelText("BRS_MCL_0")), // LSIA
-        //    new Blip(new Vector3(1728f, 3314f, 49f), 90, GetLabelText("VEX_LR_LOC1")), // sandy shores airfield
-        //    new Blip(new Vector3(2132f, 4785f, 40f), 90, GetLabelText("SM_LOC_MCK")), // mckenzie field
-        //    new Blip(new Vector3(-2198f, 2968f, 40f), 90, GetLabelText("PIM_MAGM206_1")), // fort zancudo
+        private List<Blip> blips = new List<Blip>();
 
-        //    // helicopter pad
-        //    new Blip(new Vector3(-735f, -1455f, 4f), 370, GetLabelText("ACCNA_HELIPAD")), // Helipad
-        //    // harbor / docks in La Puerta
-        //    new Blip(new Vector3(-2198f, 2968f, 40f), 90, GetLabelText("PIM_MAGM206_1")), // fort zancudo
-
-
-        //};
-
+        /// <summary>
+        /// Toggles blips on/off.
+        /// </summary>
+        /// <param name="enable"></param>
         private void ToggleBlips(bool enable)
         {
             if (enable)
             {
+                string json = LoadResourceFile(GetCurrentResourceName(), "config/locations.json");
+                if (string.IsNullOrEmpty(json))
+                {
+                    Notify.Error("An error occurred while loading the locations file.");
+                }
+                else
+                {
+                    try
+                    {
+                        Newtonsoft.Json.Linq.JObject data = JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JObject>(json);
+                        foreach (Newtonsoft.Json.Linq.JToken blip in data["blips"])
+                        {
+                            string name = blip["name"].ToString();
+                            int color = (int)blip["color"];
+                            int spriteID = (int)blip["spriteID"];
+                            Vector3 coords = new Vector3((float)blip["coordinates"]["x"], (float)blip["coordinates"]["y"], (float)blip["coordinates"]["z"]);
+                            int blipID = AddBlipForCoord(coords.X, coords.Y, coords.Z);
+                            SetBlipSprite(blipID, spriteID);
+                            BeginTextCommandSetBlipName("STRING");
+                            AddTextComponentSubstringPlayerName(name);
+                            EndTextCommandSetBlipName(blipID);
+                            SetBlipColour(blipID, color);
+                            SetBlipAsShortRange(blipID, true);
 
+
+                            Blip b = new Blip(coords, spriteID, name, color, blipID);
+                            blips.Add(b);
+                        }
+                    }
+                    catch (JsonReaderException ex)
+                    {
+                        Debug.Write($"\n\n[vMenu] An error occurred while loading the locations.json file. Please contact the server owner to resolve this.\nWhen contacting the owner, provide the following error details:\n{ex.Message}.\n\n\n");
+                    }
+                }
+            }
+            else
+            {
+                if (blips.Count > 0)
+                {
+                    foreach (Blip blip in blips)
+                    {
+                        int id = blip.blipID;
+                        if (DoesBlipExist(id))
+                        {
+                            RemoveBlip(ref id);
+                        }
+                    }
+                }
+                blips.Clear();
             }
         }
 
