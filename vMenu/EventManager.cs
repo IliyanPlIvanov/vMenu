@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
+using static vMenuShared.ConfigManager;
 
 namespace vMenuClient
 {
@@ -19,8 +20,8 @@ namespace vMenuClient
         public static int currentHours = 9;
         public static int currentMinutes = 0;
         public static bool freezeTime = false;
-
-        public static bool enableSync = true;
+        private int minuteTimer = GetGameTimer();
+        private int minuteClockSpeed = 8000;
 
         /// <summary>
         /// Constructor.
@@ -29,17 +30,13 @@ namespace vMenuClient
         {
             // Add event handlers.
             // Handle the SetPermissions event.
-            EventHandlers.Add("vMenu:SetPermissions", new Action<dynamic>(UpdatePermissions));
+            EventHandlers.Add("vMenu:ConfigureClient", new Action<dynamic, dynamic, dynamic, dynamic>(ConfigureClient));
             EventHandlers.Add("vMenu:GoToPlayer", new Action<string>(SummonPlayer));
             EventHandlers.Add("vMenu:KillMe", new Action(KillMe));
             EventHandlers.Add("vMenu:Notify", new Action<string>(NotifyPlayer));
             EventHandlers.Add("vMenu:SetWeather", new Action<string, bool, bool>(SetWeather));
             EventHandlers.Add("vMenu:SetClouds", new Action<float, string>(SetClouds));
             EventHandlers.Add("vMenu:SetTime", new Action<int, int, bool>(SetTime));
-            EventHandlers.Add("vMenu:SetOptions", new Action<dynamic>(UpdateSettings));
-            EventHandlers.Add("vMenu:SetupAddonPeds", new Action<string, dynamic>(SetAddonModels));
-            EventHandlers.Add("vMenu:SetupAddonCars", new Action<string, dynamic>(SetAddonModels));
-            EventHandlers.Add("vMenu:SetupAddonWeapons", new Action<string, dynamic>(SetAddonModels));
             EventHandlers.Add("vMenu:GoodBye", new Action(GoodBye));
             EventHandlers.Add("vMenu:SetBanList", new Action<string>(UpdateBanList));
             EventHandlers.Add("vMenu:OutdatedResource", new Action(NotifyOutdatedVersion));
@@ -48,16 +45,73 @@ namespace vMenuClient
             Tick += TimeSync;
         }
 
+        private void ConfigureClient(dynamic addonVehicles, dynamic addonPeds, dynamic addonWeapons, dynamic perms)
+        {
+            MainMenu.SetPermissions(perms);
+
+            
+            VehicleSpawner.AddonVehicles = new Dictionary<string, uint>();
+            foreach (var addon in addonVehicles)
+            {
+                string modelName = addon.ToString();
+                uint modelHash = (uint)GetHashKey(modelName);
+                cf.Log($"Addon Name: {modelName}\tAddon Hash (uint): {modelHash}.");
+
+                if (!VehicleSpawner.AddonVehicles.ContainsKey(modelName))
+                {
+                    VehicleSpawner.AddonVehicles.Add(modelName, modelHash);
+                }
+            }
+
+            PlayerAppearance.AddonPeds = new Dictionary<string, uint>();
+            foreach (var addon in addonPeds)
+            {
+                string modelName = addon.ToString();
+                uint modelHash = (uint)GetHashKey(modelName);
+                cf.Log($"Addon Name: {modelName}\tAddon Hash (uint): {modelHash}.");
+
+                if (!PlayerAppearance.AddonPeds.ContainsKey(modelName))
+                {
+                    PlayerAppearance.AddonPeds.Add(modelName, modelHash);
+                }
+            }
+
+            WeaponOptions.AddonWeapons = new Dictionary<string, uint>();
+            foreach (var addon in addonWeapons)
+            {
+                string modelName = addon.ToString();
+                uint modelHash = (uint)GetHashKey(modelName);
+                cf.Log($"Addon Name: {modelName}\tAddon Hash (uint): {modelHash}.");
+
+                if (!WeaponOptions.AddonWeapons.ContainsKey(modelName))
+                {
+                    WeaponOptions.AddonWeapons.Add(modelName, modelHash);
+                }
+            }
+
+            currentHours = GetSettingsInt(SettingsCategory.time, Setting.default_time_hour);
+            currentHours = (currentHours >= 0 && currentHours < 24) ? currentHours : 9;
+            currentMinutes = GetSettingsInt(SettingsCategory.time, Setting.default_time_min);
+            currentMinutes = (currentMinutes >= 0 && currentMinutes < 60) ? currentMinutes : 0;
+
+            minuteClockSpeed = GetSettingsInt(SettingsCategory.time, Setting.ingame_minute_duration);
+            minuteClockSpeed = (minuteClockSpeed > 0) ? minuteClockSpeed : 2000;
+
+            MainMenu.PreSetupComplete = true;
+        }
+
         /// <summary>
         /// Notifies the player that the current version of vMenu is outdated.
         /// </summary>
         private async void NotifyOutdatedVersion()
         {
-            Debug.Write("vMenu is outdated, please update asap.\n");
+            Debug.Write("\n\n\n\n[vMenu] vMenu is outdated, please update asap.\n\n\n\n");
             await Delay(5000);
             cf.Log("Sending alert now.");
-            Notify.Alert("vMenu is outdated, if you are the server administrator, please update vMenu as soon as possible.", true, true);
-
+            if (GetSettingsBool(SettingsCategory.system, Setting.oudated_version_notify_players))
+            {
+                Notify.Alert("vMenu is outdated, if you are the server administrator, please update vMenu as soon as possible.", true, true);
+            }
         }
 
         /// <summary>
@@ -79,70 +133,14 @@ namespace vMenuClient
             ForceSocialClubUpdate();
         }
 
-        /// <summary>
-        /// Triggers a settings update.
-        /// </summary>
-        /// <param name="options"></param>
-        private void UpdateSettings(dynamic options)
-        {
-            cf.Log("Options are being updated.");
-            MainMenu.SetOptions(options);
-        }
-
-        /// <summary>
-        /// Triggers a permissions update.
-        /// </summary>
-        /// <param name="permissions"></param>
-        private void UpdatePermissions(dynamic permissions)
-        {
-            cf.Log("Permissions are being updated.");
-            MainMenu.SetPermissions(permissions);
-        }
-
-        /// <summary>
-        /// Triggers a addons list update.
-        /// </summary>
-        /// <param name="addonType"></param>
-        /// <param name="addons"></param>
-        private void SetAddonModels(string addonType, dynamic addons)
-        {
-            cf.Log($"Addon models are being loaded. Addon type: {addonType}.");
-            Dictionary<string, uint> models = new Dictionary<string, uint>();
-            foreach (var addon in addons)
-            {
-                string modelName = addon.ToString();
-                uint modelHash = (uint)GetHashKey(modelName);
-
-                if (!models.ContainsKey(modelName))
-                {
-                    models.Add(modelName, modelHash);
-                }
-            }
-            if (addonType == "vehicles")
-            {
-                VehicleSpawner.AddonVehicles = models;
-                MainMenu.addonCarsLoaded = true;
-            }
-            else if (addonType == "peds")
-            {
-                PlayerAppearance.AddonPeds = models;
-                MainMenu.addonPedsLoaded = true;
-            }
-            else if (addonType == "weapons")
-            {
-                WeaponOptions.AddonWeapons = models;
-                MainMenu.addonWeaponsLoaded = true;
-            }
-
-        }
-
+       
         /// <summary>
         /// OnTick loop to keep the weather synced.
         /// </summary>
         /// <returns></returns>
         private async Task WeatherSync()
         {
-            if (enableSync)
+            if (GetSettingsBool(SettingsCategory.weather, Setting.enable_weather_sync))
             {
                 // Weather is set every 500ms, if it's changed, then it will transition to the new phase within 20 seconds.
                 await Delay(500);
@@ -201,7 +199,7 @@ namespace vMenuClient
         private async Task TimeSync()
         {
             // Check if the time sync should be disabled.
-            if (enableSync)
+            if (GetSettingsBool(SettingsCategory.time, Setting.enable_time_sync))
             {
                 // If time is frozen...
                 if (freezeTime)
@@ -213,9 +211,14 @@ namespace vMenuClient
                 // Otherwise...
                 else
                 {
-                    // Time is synced every 2 seconds (which equals 1 in-game minute).
-                    await Delay(2000);
-                    currentMinutes++;
+                    await Delay(5);
+                    // only add a minute if the timer has reached the configured duration (2000ms (2s) by default).
+                    if (GetGameTimer() - minuteTimer > minuteClockSpeed)
+                    {
+                        currentMinutes++;
+                        minuteTimer = GetGameTimer();
+                    }
+                    
                     if (currentMinutes > 59)
                     {
                         currentMinutes = 0;
@@ -298,7 +301,6 @@ namespace vMenuClient
         /// <param name="targetPlayer"></param>
         private void SummonPlayer(string targetPlayer)
         {
-            //MainMenu.Notification.Error(targetPlayer);
             cf.TeleportToPlayerAsync(GetPlayerFromServerId(int.Parse(targetPlayer)));
         }
     }

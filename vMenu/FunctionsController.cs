@@ -7,6 +7,7 @@ using CitizenFX.Core;
 using CitizenFX.Core.UI;
 using static CitizenFX.Core.Native.API;
 using NativeUI;
+using static vMenuShared.ConfigManager;
 
 namespace vMenuClient
 {
@@ -39,6 +40,11 @@ namespace vMenuClient
         private bool wasMenuJustOpen = false;
         private PlayerList blipsPlayerList = new PlayerList();
         private List<int> waypointPlayerIdsToRemove = new List<int>();
+        private int voiceTimer = 0;
+        private int voiceCycle = 1;
+        private const float voiceIndicatorWidth = 0.02f;
+        private const float voiceIndicatorHeight = 0.041f;
+        private const float voiceIndicatorMutedWidth = voiceIndicatorWidth + 0.0021f;
 
         /// <summary>
         /// Constructor.
@@ -333,8 +339,13 @@ namespace vMenuClient
                                 SetVehicleEnginePowerMultiplier(vehicle.Handle, 1f);
                             }
 
-                            // No Siren Toggle
-                            vehicle.IsSirenSilent = MainMenu.VehicleOptionsMenu.VehicleNoSiren && cf.IsAllowed(Permission.VONoSiren);
+                            // disable this if els compatibility is turned on.
+                            if (!GetSettingsBool(SettingsCategory.external, Setting.use_els_compatibility_mode))
+                            {
+                                // No Siren Toggle
+                                vehicle.IsSirenSilent = MainMenu.VehicleOptionsMenu.VehicleNoSiren && cf.IsAllowed(Permission.VONoSiren);
+                            }
+                            
                         }
 
                         // Manage "no helmet"
@@ -437,7 +448,7 @@ namespace vMenuClient
         private async Task _WeatherOptions()
         {
             await Delay(1000);
-            if (MainMenu.WeatherOptionsMenu != null && cf.IsAllowed(Permission.WOMenu))
+            if (MainMenu.WeatherOptionsMenu != null && cf.IsAllowed(Permission.WOMenu) && GetSettingsBool(SettingsCategory.weather, Setting.enable_weather_sync))
             {
                 if (MainMenu.WeatherOptionsMenu.GetMenu().Visible)
                 {
@@ -780,8 +791,8 @@ namespace vMenuClient
                         PlayerList pl = new PlayerList();
                         var i = 1;
                         var currentlyTalking = false;
-                        //cf.DrawTextOnScreen($"~b~Debugging", 0.5f, 0.00f + (i * 0.03f), 0.5f, Alignment.Center, 6);
-                        //i++;
+                        // cf.DrawTextOnScreen($"~b~Debugging", 0.5f, 0.00f + (i * 0.03f), 0.5f, Alignment.Center, 6);
+                        // i++;
                         foreach (Player p in pl)
                         {
                             if (NetworkIsPlayerTalking(p.Handle))
@@ -795,6 +806,36 @@ namespace vMenuClient
                                 i++;
                             }
                         }
+                    }
+                    if (MainMenu.VoiceChatSettingsMenu.ShowVoiceStatus)
+                    {
+
+                        if (GetGameTimer() - voiceTimer > 150)
+                        {
+                            voiceTimer = GetGameTimer();
+                            voiceCycle++;
+                            if (voiceCycle > 3)
+                            {
+                                voiceCycle = 1;
+                            }
+                        }
+                        if (!HasStreamedTextureDictLoaded("mpleaderboard"))
+                        {
+                            RequestStreamedTextureDict("mpleaderboard", false);
+                            while (!HasStreamedTextureDictLoaded("mpleaderboard"))
+                            {
+                                await Delay(0);
+                            }
+                        }
+                        if (NetworkIsPlayerTalking(PlayerId()))
+                        {
+                            DrawSprite("mpleaderboard", $"leaderboard_audio_{voiceCycle}", 0.008f, 0.985f, voiceIndicatorWidth, voiceIndicatorHeight, 0f, 255, 55, 0, 255);
+                        }
+                        else
+                        {
+                            DrawSprite("mpleaderboard", "leaderboard_audio_mute", 0.008f, 0.985f, voiceIndicatorMutedWidth, voiceIndicatorHeight, 0f, 255, 55, 0, 255);
+                        }
+
                     }
                 }
                 else
@@ -816,7 +857,7 @@ namespace vMenuClient
         /// <returns></returns>
         private async Task TimeOptions()
         {
-            if (MainMenu.TimeOptionsMenu != null && cf.IsAllowed(Permission.TOMenu))
+            if (MainMenu.TimeOptionsMenu != null && cf.IsAllowed(Permission.TOMenu) && GetSettingsBool(SettingsCategory.time, Setting.enable_time_sync))
             {
                 if ((MainMenu.TimeOptionsMenu.freezeTimeToggle != null && MainMenu.TimeOptionsMenu.GetMenu().Visible) && cf.IsAllowed(Permission.TOFreezeTime))
                 {

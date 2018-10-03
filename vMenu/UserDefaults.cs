@@ -199,6 +199,12 @@ namespace vMenuClient
             get { return GetSettingsBool("voiceChatShowSpeaker"); }
             set { SetSavedSettingsBool("voiceChatShowSpeaker", value); }
         }
+
+        public static bool ShowVoiceStatus
+        {
+            get { return GetSettingsBool("voiceChatShowVoiceStatus"); }
+            set { SetSavedSettingsBool("voiceChatShowVoiceStatus", value); }
+        }
         #endregion
 
         #endregion
@@ -365,6 +371,13 @@ namespace vMenuClient
             {
                 VoiceChatEnabled = MainMenu.VoiceChatSettingsMenu.EnableVoicechat;
                 prefs.Add("voiceChatEnabled", MainMenu.VoiceChatSettingsMenu.EnableVoicechat);
+
+
+                ShowCurrentSpeaker = MainMenu.VoiceChatSettingsMenu.ShowCurrentSpeaker;
+                prefs.Add("voiceChatShowSpeaker", MainMenu.VoiceChatSettingsMenu.ShowCurrentSpeaker);
+
+                ShowVoiceStatus = MainMenu.VoiceChatSettingsMenu.ShowVoiceStatus;
+                prefs.Add("voiceChatShowVoiceStatus", MainMenu.VoiceChatSettingsMenu.ShowVoiceStatus);
 
                 VoiceChatProximity = 2000f; // MainMenu.VoiceChatSettingsMenu.currentProximity;
                 prefs.Add("voiceChatProximity", 2000f); // MainMenu.VoiceChatSettingsMenu.currentProximity);
