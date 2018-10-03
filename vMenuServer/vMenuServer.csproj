@@ -97,7 +97,6 @@ copy /Y "D:\Tom Grobbe\Documents\GitHub Repos\vMenu\build\config\locations.json"
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "D:\Games\FiveMStuff\vMenuOriginal\vMenuServer\bin\Release\vMenuServer.net.dll" "D:\Games\FXServer\server-data\resources\vMenu\"
-</PostBuildEvent>
+    <PostBuildEvent>copy /Y "D:\Games\FiveMStuff\vMenuBigFam\vMenuServer\bin\Release\vMenuServer.net.dll" "D:\Games\FXServer\server-data\resources\vMenu\"</PostBuildEvent>
   </PropertyGroup>
 </Project>
