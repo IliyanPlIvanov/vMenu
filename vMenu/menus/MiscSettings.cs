@@ -46,7 +46,7 @@ namespace vMenuClient
                 ControlDisablingEnabled = false
             };
 
-            UIMenu teleportMenu = new UIMenu(GetPlayerName(PlayerId()), "Teleport Locations", true)
+            UIMenu teleportMenu = new UIMenu("Teleport Locations", "Teleport to a predefined location", true)
             {
                 ScaleWithSafezone = false,
                 MouseControlsEnabled = false,
