@@ -412,7 +412,7 @@ namespace vMenuClient
                         NoClipKey = GetSettingsInt(SettingsCategory.general, Setting.noclip_toggle_key);
                     }
                     // Create the main menu.
-                    Menu = new UIMenu(GetPlayerName(PlayerId()), "BigFam Crew", true)
+                    Menu = new UIMenu("BigFam Crew", "BigFam Crew", true)
                     {
                         ScaleWithSafezone = false,
                         MouseControlsEnabled = false,
