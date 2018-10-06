@@ -46,7 +46,7 @@ namespace vMenuClient
                 ControlDisablingEnabled = false
             };
 
-            UIMenu teleportMenu = new UIMenu(GetPlayerName(PlayerId()), "Teleport Locations", true)
+            UIMenu teleportMenu = new UIMenu("BigFam Crew", "Teleport Locations", true)
             {
                 ScaleWithSafezone = false,
                 MouseControlsEnabled = false,
