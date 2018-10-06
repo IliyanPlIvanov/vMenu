@@ -75,8 +75,9 @@ namespace vMenuServer
         private bool resetBlackout = false;
         private bool freezeTime = false;
         private int dynamicWeatherMinutes = 10;
-        private int dynamicWeatherTimeLeft = 5 * 12 * 10; // 5 seconds * 12 (because the loop checks 12 times a minute) * 10 (10 minutes)
+        //private int dynamicWeatherTimeLeft = 5 * 12 * 10; // 5 seconds * 12 (because the loop checks 12 times a minute) * 10 (10 minutes)
         private long gameTimer = GetGameTimer();
+        private long weatherTimer = GetGameTimer();
         private List<string> CloudTypes = new List<string>()
         {
             "Cloudy 01",
@@ -432,7 +433,7 @@ namespace vMenuServer
             if (GetCurrentResourceName() != "vMenu")
             {
                 Exception InvalidNameException = new Exception("\r\n\r\n^1[vMenu] INSTALLATION ERROR!\r\nThe name of the resource is not valid. " +
-                    "Please change the folder name from '^3" + GetCurrentResourceName() + "^0' to '^2vMenu^0' (case sensitive) instead!\r\n\r\n\r\n^0");
+                    "Please change the folder name from '^3" + GetCurrentResourceName() + "^1' to '^2vMenu^1' (case sensitive) instead!\r\n\r\n\r\n^0");
                 try
                 {
                     throw InvalidNameException;
@@ -444,7 +445,7 @@ namespace vMenuServer
             }
             else
             {
-                InitializeConfig();
+                //InitializeConfig();
                 // Add event handlers.
                 EventHandlers.Add("vMenu:SummonPlayer", new Action<Player, int>(SummonPlayer));
                 EventHandlers.Add("vMenu:KillPlayer", new Action<Player, int>(KillPlayer));
@@ -492,16 +493,16 @@ namespace vMenuServer
                 }
 
 
-                dynamicWeather = GetSettingsBool(SettingsCategory.weather, Setting.enable_dynamic_weather);
-                if (GetSettingsInt(SettingsCategory.weather, Setting.dynamic_weather_timer) != -1)
+                dynamicWeather = GetSettingsBool(Setting.vmenu_enable_dynamic_weather);
+                if (GetSettingsInt(Setting.vmenu_dynamic_weather_timer) != -1)
                 {
-                    dynamicWeatherMinutes = GetSettingsInt(SettingsCategory.weather, Setting.dynamic_weather_timer);
-                    dynamicWeatherTimeLeft = 5 * 12 * dynamicWeatherMinutes;
+                    dynamicWeatherMinutes = GetSettingsInt(Setting.vmenu_dynamic_weather_timer);
+                    //dynamicWeatherTimeLeft = 5 * 12 * dynamicWeatherMinutes;
                 }
 
 
 
-                string defaultWeather = GetSettingsString(SettingsCategory.weather, Setting.default_weather);
+                string defaultWeather = GetSettingsString(Setting.vmenu_default_weather);
 
                 if (!string.IsNullOrEmpty(defaultWeather))
                 {
@@ -511,13 +512,13 @@ namespace vMenuServer
                     }
                 }
 
-                currentHours = GetSettingsInt(SettingsCategory.time, Setting.default_time_hour);
+                currentHours = GetSettingsInt(Setting.vmenu_default_time_hour);
                 currentHours = (currentHours >= 0 && currentHours < 24) ? currentHours : 9;
-                currentMinutes = GetSettingsInt(SettingsCategory.time, Setting.default_time_min);
+                currentMinutes = GetSettingsInt(Setting.vmenu_default_time_min);
                 currentMinutes = (currentMinutes >= 0 && currentMinutes < 60) ? currentMinutes : 0;
 
 
-                minuteClockSpeed = GetSettingsInt(SettingsCategory.time, Setting.ingame_minute_duration);
+                minuteClockSpeed = GetSettingsInt(Setting.vmenu_ingame_minute_duration);
                 minuteClockSpeed = (minuteClockSpeed > 0) ? minuteClockSpeed : 2000;
 
                 Tick += WeatherLoop;
@@ -542,7 +543,7 @@ namespace vMenuServer
         /// <returns></returns>
         private async Task TimeLoop()
         {
-            if (GetSettingsBool(SettingsCategory.time, Setting.enable_time_sync))
+            if (GetSettingsBool(Setting.vmenu_enable_time_sync))
             {
                 if (minuteClockSpeed > 2000)
                 {
@@ -589,34 +590,32 @@ namespace vMenuServer
         {
             await Delay(5000);
 
-            if (GetSettingsBool(SettingsCategory.weather, Setting.enable_weather_sync))
+            if (GetSettingsBool(Setting.vmenu_enable_weather_sync))
             {
                 if (dynamicWeather)
                 {
-                    dynamicWeatherTimeLeft -= 10;
-                    if (resetBlackout && dynamicWeatherTimeLeft < (5 * 12 * dynamicWeatherMinutes) - 60) // if 1 minute has passed since last change, and resetblackout is true, disable blackout and reset it.
+                    if (resetBlackout && GetGameTimer() - weatherTimer > 60000) // if 1 minute has passed since last change, and resetblackout is true, disable blackout and reset it.
                     {
                         resetBlackout = false;
                         blackout = false;
                     }
-                    if (dynamicWeatherTimeLeft < 10)
+                    if (GetGameTimer() - weatherTimer > (dynamicWeatherMinutes * 60000))
                     {
-                        dynamicWeatherTimeLeft = 5 * 12 * dynamicWeatherMinutes;
                         RefreshWeather();
-
                         if (DebugMode)
                         {
                             long gameTimer2 = GetGameTimer();
-                            Log($"Changing weather, last weather duration: {((gameTimer2 - gameTimer) / 1000 / 60).ToString()} minutes. New Weather Type: {currentWeather}");
+                            Log($"Changing weather, last weather duration: {(int)((GetGameTimer() - weatherTimer) / 60000)} minutes. New Weather Type: {currentWeather}");
                             gameTimer = gameTimer2;
                         }
+                        weatherTimer = GetGameTimer();
                     }
                 }
                 else
                 {
-                    dynamicWeatherTimeLeft = 5 * 12 * dynamicWeatherMinutes;
+                    weatherTimer = GetGameTimer();
                 }
-                if (GetSettingsBool(SettingsCategory.weather, Setting.allow_random_blackout) && currentWeather == "THUNDER" && new Random().Next(5) == 1 && !blackout && !resetBlackout)
+                if (GetSettingsBool(Setting.vmenu_allow_random_blackout) && (currentWeather == "THUNDER" || currentWeather == "HALLOWHEEN") && new Random().Next(5) == 1 && !blackout && !resetBlackout)
                 {
                     blackout = true;
                     resetBlackout = true;
@@ -923,7 +922,7 @@ namespace vMenuServer
         private static void KickLog(string kickLogMesage)
         {
             //if (GetConvar("vMenuLogKickActions", "true") == "true")
-            if (GetSettingsBool(SettingsCategory.system, Setting.log_kick_actions))
+            if (GetSettingsBool(Setting.vmenu_log_kick_actions))
             {
                 string file = LoadResourceFile(GetCurrentResourceName(), "vmenu.log") ?? "";
                 DateTime date = DateTime.Now;

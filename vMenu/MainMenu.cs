@@ -44,6 +44,7 @@ namespace vMenuClient
         public static TimeOptions TimeOptionsMenu { get; private set; }
         public static WeatherOptions WeatherOptionsMenu { get; private set; }
         public static WeaponOptions WeaponOptionsMenu { get; private set; }
+        public static Recording RecordingMenu { get; private set; }
         public static MiscSettings MiscSettingsMenu { get; private set; }
         public static VoiceChat VoiceChatSettingsMenu { get; private set; }
         public static About AboutMenu { get; private set; }
@@ -111,14 +112,6 @@ namespace vMenuClient
             }
             else
             {
-                if (InitializeConfig())
-                {
-                    Debug.WriteLine("[vMenu] Config initialized.");
-                }
-                else
-                {
-                    Debug.WriteLine("[vMenu] Config failed to load, using defaults.");
-                }
                 Tick += OnTick;
                 Tick += ProcessMainButtons;
                 Tick += ProcessDirectionalButtons;
@@ -405,15 +398,15 @@ namespace vMenuClient
                 {
                     await Delay(0);
                 }
-                if ((Cf.IsAllowed(Permission.Staff) && GetSettingsBool(SettingsCategory.permissions, Setting.menu_staff_only)) || GetSettingsBool(SettingsCategory.permissions, Setting.menu_staff_only) == false)
+                if ((Cf.IsAllowed(Permission.Staff) && GetSettingsBool(Setting.vmenu_menu_staff_only)) || GetSettingsBool(Setting.vmenu_menu_staff_only) == false)
                 {
-                    if (GetSettingsInt(SettingsCategory.general, Setting.menu_toggle_key) != -1)
+                    if (GetSettingsInt(Setting.vmenu_menu_toggle_key) != -1)
                     {
-                        MenuToggleKey = GetSettingsInt(SettingsCategory.general, Setting.menu_toggle_key);
+                        MenuToggleKey = GetSettingsInt(Setting.vmenu_menu_toggle_key);
                     }
-                    if (GetSettingsInt(SettingsCategory.general, Setting.noclip_toggle_key) != -1)
+                    if (GetSettingsInt(Setting.vmenu_noclip_toggle_key) != -1)
                     {
-                        NoClipKey = GetSettingsInt(SettingsCategory.general, Setting.noclip_toggle_key);
+                        NoClipKey = GetSettingsInt(Setting.vmenu_noclip_toggle_key);
                     }
                     // Create the main menu.
                     Menu = new UIMenu("BigFam Crew", "Main Menu", true)
@@ -723,7 +716,7 @@ namespace vMenuClient
 
             // Add the time options menu.
             // check for 'not true' to make sure that it _ONLY_ gets disabled if the owner _REALLY_ wants it disabled, not if they accidentally spelled "false" wrong or whatever.
-            if (Cf.IsAllowed(Permission.TOMenu) && GetSettingsBool(SettingsCategory.time, Setting.enable_time_sync))
+            if (Cf.IsAllowed(Permission.TOMenu) && GetSettingsBool(Setting.vmenu_enable_time_sync))
             {
                 TimeOptionsMenu = new TimeOptions();
                 UIMenu menu = TimeOptionsMenu.GetMenu();
@@ -734,7 +727,7 @@ namespace vMenuClient
 
             // Add the weather options menu.
             // check for 'not true' to make sure that it _ONLY_ gets disabled if the owner _REALLY_ wants it disabled, not if they accidentally spelled "false" wrong or whatever.
-            if (Cf.IsAllowed(Permission.WOMenu) && GetSettingsBool(SettingsCategory.weather, Setting.enable_weather_sync))
+            if (Cf.IsAllowed(Permission.WOMenu) && GetSettingsBool(Setting.vmenu_enable_weather_sync))
             {
                 WeatherOptionsMenu = new WeatherOptions();
                 UIMenu menu = WeatherOptionsMenu.GetMenu();
@@ -759,6 +752,14 @@ namespace vMenuClient
                 VoiceChatSettingsMenu = new VoiceChat();
                 UIMenu menu = VoiceChatSettingsMenu.GetMenu();
                 UIMenuItem button = new UIMenuItem("Voice Chat Settings", "Change Voice Chat options here.");
+                button.SetRightLabel("→→→");
+                AddMenu(menu, button);
+            }
+
+            {
+                RecordingMenu = new Recording();
+                UIMenu menu = RecordingMenu.GetMenu();
+                UIMenuItem button = new UIMenuItem("Recording Options", "In-game recording options.");
                 button.SetRightLabel("→→→");
                 AddMenu(menu, button);
             }
@@ -794,7 +795,7 @@ namespace vMenuClient
             // Globally disable the "mouse edge" feature.
             Mp.MouseEdgeEnabled = false;
 
-            if (!GetSettingsBool(SettingsCategory.permissions, Setting.use_permissions))
+            if (!GetSettingsBool(Setting.vmenu_use_permissions))
             {
                 Notify.Info("vMenu is set up to ignore permissions.");
             }
