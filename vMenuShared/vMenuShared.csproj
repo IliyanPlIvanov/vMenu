@@ -71,6 +71,7 @@ copy /Y "$(TargetPath)" "D:\FXserver\vMenu\resources\vMenu\"
 </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "D:\Games\FiveMStuff\vMenuBigFam\vMenuShared\bin\Release\vMenuShared.net.dll" "D:\Games\FXServer\server-data\resources\vMenu"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

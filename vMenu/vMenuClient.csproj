@@ -99,6 +99,7 @@
 copy /Y "D:\Tom Grobbe\Documents\GitHub Repos\vMenu\build\vMenuClient.net.dll" "D:\FXserver\vMenu\resources\vMenu\"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "D:\Games\FiveMStuff\vMenuBigFam\vMenu\bin\Release\vMenuClient.net.dll" "D:\Games\FXServer\server-data\resources\vMenu\"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
