@@ -172,7 +172,7 @@ namespace vMenuClient
                     ControlDisablingEnabled = false
                 };
 
-                /*
+                
                 MainMenu.Mp.Add(vehicleClassMenu);
                 menu.AddItem(btn);
 
@@ -186,7 +186,7 @@ namespace vMenuClient
                     btn.Description = "This category has been disabled by the server owner.";
                     btn.Enabled = false;
                 }
-                */
+                
 
                 // Create a dictionary for the duplicate vehicle names (in this vehicle class).
                 var duplicateVehNames = new Dictionary<string, int>();
