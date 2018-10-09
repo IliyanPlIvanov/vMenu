@@ -30,7 +30,7 @@ namespace vMenuClient
         //public static bool addonPedsLoaded = false;
         //public static bool addonWeaponsLoaded = false;
 
-        private static int MenuToggleKey = 244; // M by default (InteractionMenu)
+        private static int MenuToggleKey = 288; // M by default (InteractionMenu)
         private static int NoClipKey = 289; // F2 by default (ReplayStartStopRecordingSecondary)
         public static UIMenu Menu { get; private set; }
 
