@@ -49,7 +49,7 @@ namespace vMenuClient
             // Add the items to the menu.
             if (cf.IsAllowed(Permission.VSSpawnByName))
             {
-               // menu.AddItem(spawnByName);
+                menu.AddItem(spawnByName);
             }
             //menu.AddItem(spawnInVeh);
             //menu.AddItem(replacePrev);
@@ -172,7 +172,7 @@ namespace vMenuClient
                     ControlDisablingEnabled = false
                 };
 
-                
+                /*
                 MainMenu.Mp.Add(vehicleClassMenu);
                 menu.AddItem(btn);
 
@@ -186,6 +186,7 @@ namespace vMenuClient
                     btn.Description = "This category has been disabled by the server owner.";
                     btn.Enabled = false;
                 }
+                */
                 
 
                 // Create a dictionary for the duplicate vehicle names (in this vehicle class).
