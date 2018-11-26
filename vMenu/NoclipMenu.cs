@@ -14,16 +14,18 @@ namespace vMenuClient
         private CommonFunctions cf = MainMenu.Cf;
         private bool setupDone = false;
         private UIMenu noclipMenu = null;
-        private int currentSpeed = 1;
+        private int currentSpeed = 0;
 
         private List<string> speeds = new List<string>()
         {
+            "Very Slow",
             "Slow",
-            "Medium",
+            "Normal",
             "Fast",
             "Very Fast",
             "Extremely Fast",
-            "~r~~h~WARP~h~ ~s~Speed!"
+            "Extremely Fast v2.0",
+            "Max Speed"
         };
 
         /// <summary>
@@ -103,11 +105,11 @@ namespace vMenuClient
 
                             if (Game.IsDisabledControlPressed(0, Control.MoveUpOnly))
                             {
-                                yoff = 3.0f;
+                                yoff = 0.5f;
                             }
                             if (Game.IsDisabledControlPressed(0, Control.MoveDownOnly))
                             {
-                                yoff = -3.0f;
+                                yoff = -0.5f;
                             }
                             if (Game.IsDisabledControlPressed(0, Control.MoveLeftOnly))
                             {
@@ -119,15 +121,19 @@ namespace vMenuClient
                             }
                             if (Game.IsDisabledControlPressed(0, Control.Cover))
                             {
-                                zoff = 0.6f;
+                                zoff = 0.21f;
                             }
                             if (Game.IsDisabledControlPressed(0, Control.MultiplayerInfo))
                             {
-                                zoff = -0.6f;
+                                zoff = -0.21f;
                             }
                         }
-
-                        newPos = GetOffsetFromEntityInWorldCoords(noclipEntity, 0f, yoff * (currentSpeed + 0.3f), zoff * (currentSpeed + 0.3f));
+                        float moveSpeed = (float)currentSpeed;
+                        if (currentSpeed > speeds.Count / 2)
+                        {
+                            moveSpeed *= 1.8f;
+                        }
+                        newPos = GetOffsetFromEntityInWorldCoords(noclipEntity, 0f, yoff * (moveSpeed + 0.3f), zoff * (moveSpeed + 0.3f));
 
                         var heading = GetEntityHeading(noclipEntity);
                         SetEntityVelocity(noclipEntity, 0f, 0f, 0f);
